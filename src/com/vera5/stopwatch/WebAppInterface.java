@@ -18,5 +18,4 @@ public class WebAppInterface {
 		Toast.makeText(mParent, s, Toast.LENGTH_SHORT).show();
 	}
 
-
 }
