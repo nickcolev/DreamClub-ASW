@@ -1,7 +1,4 @@
-<html><head><TITLE>StopWatch</TITLE>
-<meta name="viewport" content="width=device-width,height=device-height"/>
-<script type="text/javascript">
-var t, t1, t2, o, run = false, ms = 0, x, y, b, dn = false;
+var t, t1, t2, o, run = false, ms = 0, x, y, b, dn = false, tag, long = 500;
 function about () {
   alert ("(c) vera5.com, 2011");
 }
@@ -20,6 +17,10 @@ function pad2 (n) {
 function reset () {
   stop ();
   ms = 0;
+  if (tag != null) {
+	  Android.save(tag, o.innerHTML);
+	  tag = null;
+  }
   o.innerHTML = "00:00:00";
 }
 function tick () {
@@ -46,6 +47,7 @@ function start () {
   o.title = "Stop";
   run = true;
 }
+// https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
 function kDown(e) {
 	dn = true;
 	if (!e) e = window.event;
@@ -60,28 +62,10 @@ function kUp(e) {
 	dn = false;
 	if (!e) e = window.event;
 	o.removeEventListener("move", this, false);
-	if ((new Date().getTime() - b) > 500)	// Long-press
-		alert("Long-press detected\nx: "+x+"->"+e.pageX+"\ny: "+y+"->"+e.pageY+"\nt: "+(new Date().getTime() - b));
-	else
+	if ((new Date().getTime() - b) > long) {	// Long-press
+		var s = prompt("Tag", tag);
+		if (s) tag = s;
+		//alert("Long-press detected\nx: "+x+"->"+e.pageX+"\ny: "+y+"->"+e.pageY+"\nt: "+(new Date().getTime() - b));
+	} else
 		ctrl();
 }
-</script>
-<style type="text/css">
-a	{ text-decoration: none; color: #ff0; }
-body	{ background-color: #121; color: #fff; font-family: sans-serif; }
-#t	{ font-size: 3em; font-weight: bold; color: #FFFFFF; cursor: pointer; }
-</style>
-</head>
-<body onload="init()">
-
-<table height="100%" width="100%">
- <tr><td colspan=3>&nbsp;</td></tr>
- <tr height="5%">
-  <td align="center" width="35%"><a href="javascript:reset()" title="Click to reset">&equiv;</a></td>
-  <td align="center" width="30%" id="t" onMouseDown="kDown(event)" onMouseUp="kUp(event)" title="Click to Start">00:00:00</td>
-  <td align="center" width="35%"><a href="javascript:about()" title="About">&copy;</a></td>
- </tr>
- <tr><td colspan=3>&nbsp;</td></tr>
-</table>
-
-</body></html>
