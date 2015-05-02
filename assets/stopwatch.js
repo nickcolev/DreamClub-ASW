@@ -17,9 +17,10 @@ function pad2 (n) {
 function reset () {
   stop ();
   ms = 0;
-  if (tag != null) {
+  var tag = document.getElementById("tag");
+  if (tag.innerHTML != "&nbsp;") {
 	  Android.save(tag, o.innerHTML);
-	  tag = null;
+	  tag.innerHTML = "&nbsp;";
   }
   o.innerHTML = "00:00:00";
 }
@@ -39,12 +40,14 @@ function stop () {
   clearInterval (t);
   ms += t2.getTime () - t1.getTime ();
   o.title = "Start";
+  o.style.color = "";
   run = false;
 }
 function start () {
   t1 = new Date ();
   t = setInterval ("tick()", 200);
   o.title = "Stop";
+  o.style.color = "#ff7";
   run = true;
 }
 // https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
@@ -54,8 +57,9 @@ function kDown(e) {
 	x = e.pageX;
 	y = e.pageY;
 	b = new Date().getTime();
+	o.style.color = "#776";
 	o.addEventListener("mousemove", function(e){
-		if (dn) console.log("move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
+		if (dn) alert("move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
 	}, true);
 	return true;
 }
@@ -63,6 +67,7 @@ function kUp(e) {
 	dn = false;
 	if (!e) e = window.event;
 	o.removeEventListener("move", this, false);
+	o.style.color = "#ff7";
 	if ((new Date().getTime() - b) > long) {	// Long-press
 		var s = prompt("Tag", tag);
 		if (s) document.getElementById("tag").innerHTML = s;
