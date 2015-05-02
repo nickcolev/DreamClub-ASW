@@ -57,6 +57,7 @@ function kDown(e) {
 	o.addEventListener("mousemove", function(e){
 		if (dn) console.log("move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
 	}, true);
+	return true;
 }
 function kUp(e) {
 	dn = false;
@@ -64,7 +65,7 @@ function kUp(e) {
 	o.removeEventListener("move", this, false);
 	if ((new Date().getTime() - b) > long) {	// Long-press
 		var s = prompt("Tag", tag);
-		if (s) tag = s;
+		if (s) document.getElementById("tag").innerHTML = s;
 		//alert("Long-press detected\nx: "+x+"->"+e.pageX+"\ny: "+y+"->"+e.pageY+"\nt: "+(new Date().getTime() - b));
 	} else
 		ctrl();
