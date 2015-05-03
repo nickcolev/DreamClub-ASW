@@ -1,4 +1,5 @@
-var t, t1, t2, o, run = false, ms = 0, x, y, b, dn = false, tag, long = 500;
+var t, t1, t2, o, run = false, ms = 0, b, dn = false, long = 500,
+	x, y;
 function about () {
   alert ("(c) vera5.com, 2011");
 }
@@ -36,6 +37,12 @@ function tick () {
   var ss = Math.floor (dx/1000);
   o.innerHTML = pad2 (hh) + ':' + pad2 (mm) + ':' + pad2 (ss);
 }
+function setTag() {
+	var	tag = document.getElementById("tag"),
+		old = tag.innerHTML.replace(/^&nbsp;/, ""),
+		s = prompt("Tag", old);
+	if (s) tag.innerHTML = s;
+}
 function stop () {
   clearInterval (t);
   ms += t2.getTime () - t1.getTime ();
@@ -54,13 +61,9 @@ function start () {
 function kDown(e) {
 	dn = true;
 	if (!e) e = window.event;
-	x = e.pageX;
-	y = e.pageY;
+	x = e.pageX; y = e.pageY;
 	b = new Date().getTime();
 	o.style.color = "#776";
-	o.addEventListener("mousemove", function(e){
-		if (dn) alert("move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
-	}, true);
 	return true;
 }
 function kUp(e) {
@@ -68,10 +71,27 @@ function kUp(e) {
 	if (!e) e = window.event;
 	o.removeEventListener("move", this, false);
 	o.style.color = "#ff7";
+	//if (pageX != x | pageY != y)
+		//testOut(" move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
+	//else
 	if ((new Date().getTime() - b) > long) {	// Long-press
-		var s = prompt("Tag", tag);
-		if (s) document.getElementById("tag").innerHTML = s;
-		//alert("Long-press detected\nx: "+x+"->"+e.pageX+"\ny: "+y+"->"+e.pageY+"\nt: "+(new Date().getTime() - b));
+		testOut("Long-press detected: "+(new Date().getTime() - b)+"ms");
+		setTag();
+		x = e.pageX; y = e.pageY;
 	} else
 		ctrl();
+}
+function testOut(s) {
+	var test = document.getElementById("test");
+	//test.innerHTML = s;
+}
+
+function testChromeDown(e) {
+	dn = true;
+}
+function testChromeUp(e) {
+	dn = false;
+}
+function testChromeMove(e) {
+if (dn) console.log(e.target.id, e.target.innerHTML, e.pageX, e.pageY);
 }
