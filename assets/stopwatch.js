@@ -1,97 +1,141 @@
 var t, t1, t2, o, run = false, ms = 0, b, dn = false, long = 500,
-	x, y;
-function about () {
+	x, y, ts;
+
+var sw = {	// Future development
+	ts: 0,	// time stamp
+	t: 0,
+	run: false,
+	ms: 0,
+	x: 0,
+	y: 0,
+	start: function(e) { },
+	stop: function(e) { }
+}
+
+function about() {
   alert ("(c) vera5.com, 2011");
 }
-function ctrl () {
-  if (run)
-    stop ();
-  else
-    start ();
+function init() {
 }
-function init () {
-  o = document.getElementById ('t');
+
+function reset(e) {
+	var wasStopped = !run;
+	stop(e);
+	ms = 0;
+	var time = getTarget(e),
+		tag = time.parentElement.previousElementSibling.firstElementChild;
+	if (wasStopped && tag.innerHTML != "&nbsp;") {
+		Android.save(time.innerText, tag.innerText);
+		tag.innerHTML = "&nbsp;";
+	}
+	time.innerHTML = "00:00:00";
 }
-function pad2 (n) {
-  return (n < 10 ? '0' : '') + n;
+function tick(e) {
+	t2 = new Date ();
+	var dx = ms + t2.getTime() - t1.getTime();
+	dx = ms + t2.getTime() - e.timeStamp;
+	var dd = Math.floor (dx/1000/60/60/24);
+	dx -= dd * 1000*60*60*24;
+	var hh = Math.floor (dx/1000/60/60);
+	dx -= hh * 1000*60*60;
+	var mm = Math.floor (dx/1000/60);
+	dx -= mm * 1000*60;
+	var ss = Math.floor (dx/1000);
+	setValue(e,fmtTime(hh,mm,ss));
 }
-function reset () {
-  stop ();
-  ms = 0;
-  var tag = document.getElementById("tag");
-  if (tag.innerHTML != "&nbsp;") {
-	  Android.save(tag, o.innerHTML);
-	  tag.innerHTML = "&nbsp;";
-  }
-  o.innerHTML = "00:00:00";
-}
-function tick () {
-  t2 = new Date ();
-  var dx = ms + t2.getTime () - t1.getTime ();
-  var dd = Math.floor (dx/1000/60/60/24);
-  dx -= dd * 1000*60*60*24;
-  var hh = Math.floor (dx/1000/60/60);
-  dx -= hh * 1000*60*60;
-  var mm = Math.floor (dx/1000/60);
-  dx -= mm * 1000*60;
-  var ss = Math.floor (dx/1000);
-  o.innerHTML = pad2 (hh) + ':' + pad2 (mm) + ':' + pad2 (ss);
-}
-function setTag() {
-	var	tag = document.getElementById("tag"),
+
+function setTag(e) {
+	var	tag = getTarget(e),
 		old = tag.innerHTML.replace(/^&nbsp;/, ""),
 		s = prompt("Tag", old);
 	if (s) tag.innerHTML = s;
 }
-function stop () {
-  clearInterval (t);
-  ms += t2.getTime () - t1.getTime ();
-  o.title = "Start";
-  o.style.color = "";
-  run = false;
-}
-function start () {
-  t1 = new Date ();
-  t = setInterval ("tick()", 200);
-  o.title = "Stop";
-  o.style.color = "#ff7";
-  run = true;
-}
-// https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
-function kDown(e) {
-	dn = true;
-	if (!e) e = window.event;
-	x = e.pageX; y = e.pageY;
-	b = new Date().getTime();
-	o.style.color = "#776";
-	return true;
-}
-function kUp(e) {
-	dn = false;
-	if (!e) e = window.event;
-	o.removeEventListener("move", this, false);
-	o.style.color = "#ff7";
-	//if (pageX != x | pageY != y)
-		//testOut(" move dx="+(x - e.pageX)+" dy="+(y - e.pageY));
-	//else
-	if ((new Date().getTime() - b) > long) {	// Long-press
-		testOut("Long-press detected: "+(new Date().getTime() - b)+"ms");
-		setTag();
-		x = e.pageX; y = e.pageY;
-	} else
-		ctrl();
-}
-function testOut(s) {
-	var test = document.getElementById("test");
-	//test.innerHTML = s;
+
+function ctrl (e) {
+  if (run)
+    stop (e);
+  else
+    start (e);
 }
 
-function testChromeDown(e) {
+function start (e) {
+	ts = e.timeStamp;
+	t1 = new Date ();
+	t = setInterval(function(){ tick(e); },200);
+	setColor(e,"#ff7");
+	run = true;
+}
+
+function stop (e) {
+  clearInterval(t);
+  if (t2) ms += t2.getTime() - t1.getTime();
+  setColor(e,"");
+  run = false;
+}
+
+function kDown(e) {
+	e.preventDefault();
 	dn = true;
+	x = e.pageX; y = e.pageY;
+	b = new Date().getTime();
+	setColor(e,"#776");
 }
-function testChromeUp(e) {
+
+function kUp(e) {
+	e.preventDefault();
+	document.removeEventListener("mousemove");
 	dn = false;
+	setColor(e,"#ff7");
+	if ((new Date().getTime() - b) > long) {	// Long-press
+		testOut("Long-press detected: "+(new Date().getTime() - b)+"ms");
+		reset(e);
+		x = e.pageX; y = e.pageY;
+	} else {
+		testOut("&nbsp;");
+		ctrl(e);
+	}
 }
-function testChromeMove(e) {
-if (dn) console.log(e.target.id, e.target.innerHTML, e.pageX, e.pageY);
+
+// Helpers
+function pad2(n) {
+  return (n < 10 ? '0' : '') + n;
+}
+function fmtTime(h,m,s) {
+	return pad2(h)+':'+pad2(m)+':'+pad2(s);
+}
+function getTarget(e) {
+	if (e.target.style) return e.target;
+	if (e.currentTarget) return e.currentTarget;
+}
+function setColor(event,color) {
+	getTarget(event).style.color = color;
+}
+function setValue(obj,value) {
+	if (obj.target.nodeValue) obj.target.nodeValue = value;
+	else if (obj.target.innerText) obj.target.innerText = value;
+}
+
+// Test
+function testOut(s) {
+	var test = document.getElementById("test");
+	test.innerHTML = s;
+}
+function props(obj) {
+	var s = "", v;
+	for(var p in obj)
+		if(obj[p]) {
+			if(typeof obj[p] === "function")
+				s += p+"()<br/>";
+			else {
+				v = obj[p].toString().replace(/</, "&lt;");
+				v = v.replace(/>/, "&gt;");
+				s += p+"="+v+"<br/>";
+			}
+		}
+	testOut(s);
+}
+if (!window.Android) {
+	var Android = {
+		save: function(time,tag) { console.log(time,tag); }
+	}
 }

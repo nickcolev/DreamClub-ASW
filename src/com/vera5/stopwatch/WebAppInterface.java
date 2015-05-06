@@ -38,6 +38,7 @@ public class WebAppInterface {
 			FileWriter fw = new FileWriter(log, true);
 			fw.write(row);
 			fw.close();
+			Tooltip("Saved");
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
