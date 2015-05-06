@@ -13,7 +13,7 @@ var sw = {	// Future development
 }
 
 function about() {
-  alert ("(c) vera5.com, 2011");
+  alert("(c) vera5.com, 2011");
 }
 function init() {
 }
@@ -136,6 +136,23 @@ function props(obj) {
 }
 if (!window.Android) {
 	var Android = {
-		save: function(time,tag) { console.log(time,tag); }
+		save: function(time,tag) { console.log(time,tag); },
+		Tooltip: function(msg) { console.log(msg); }
 	}
+}
+
+var mx, my;
+function kmDown(e) {
+	e.preventDefault();
+	mx = e.pageX; my = e.pageY;
+	//console.log(e);
+}
+function kmUp(e) {
+	e.preventDefault();
+	if (my > e.pageY) newTimer(e);
+	console.log(e, e.pageX - mx, e.pageY - my);
+}
+function newTimer(e) {
+	alert("New timer under development");
+	//Android.Tooltip("under devel");
 }
