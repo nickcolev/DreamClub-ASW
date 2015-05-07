@@ -1,7 +1,7 @@
 a	{ text-decoration: none; color: #ff0; }
 body	{ background-color: #121; color: #fff; font-family: sans-serif; }
-.time	{ font-size: 3.25em; font-weight: bold; color: #ffe; }
+.time	{ font-size: 350%; font-weight: bold; color: #ffe; }
 .tag	{ font-size: 1em; text-align: center; vertical-align: bottom; }
 .click	{ cursor: hand; }
 td	{ text-align: center; }
-div.cpy	{ position: absolute; top: 4px; right: 4px; }
+div.cpy	{ position: absolute; width: 1em; height: 1em; top: 6px; right: 6px; }
