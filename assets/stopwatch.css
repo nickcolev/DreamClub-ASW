@@ -4,4 +4,3 @@ body	{ background-color: #121; color: #fff; font-family: sans-serif; }
 .tag	{ font-size: 1em; text-align: center; vertical-align: bottom; }
 .click	{ cursor: hand; }
 td	{ text-align: center; }
-div.cpy	{ position: absolute; width: 1em; height: 1em; top: 6px; right: 6px; }

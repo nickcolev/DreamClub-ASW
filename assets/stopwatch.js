@@ -12,9 +12,6 @@ var sw = {	// Future development
 	stop: function(e) { }
 }
 
-function about() {
-  alert("(c) vera5.com, 2011");
-}
 function init() {
 }
 
