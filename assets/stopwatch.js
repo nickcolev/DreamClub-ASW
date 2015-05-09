@@ -1,5 +1,6 @@
 var t, t1, t2, o, run = false, ms = 0, b, dn = false, long = 500,
-	x, y, ts;
+	x, y, ts=0;
+var cnt=0;
 
 var sw = {	// Future development
 	ts: 0,	// time stamp
@@ -27,10 +28,10 @@ function reset(e) {
 	}
 	time.innerHTML = "00:00:00";
 }
+
 function tick(e) {
 	t2 = new Date ();
 	var dx = ms + t2.getTime() - t1.getTime();
-	dx = ms + t2.getTime() - e.timeStamp;
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
 	var hh = Math.floor (dx/1000/60/60);
@@ -49,17 +50,17 @@ function setTag(e) {
 }
 
 function ctrl (e) {
-  if (run)
-    stop (e);
-  else
-    start (e);
+	if (run)
+		stop (e);
+	else
+		start (e);
 }
 
 function start (e) {
 	ts = e.timeStamp;
 	t1 = new Date ();
-	t = setInterval(function(){ tick(e); },200);
-	setColor(e,"#ff7");
+	t = setInterval(function(){ tick(e); },1000);
+	setColor(e,"#ff9");
 	run = true;
 }
 
@@ -72,6 +73,7 @@ function stop (e) {
 
 function kDown(e) {
 	e.preventDefault();
+	e.stopPropagation();
 	dn = true;
 	x = e.pageX; y = e.pageY;
 	b = new Date().getTime();
@@ -80,15 +82,13 @@ function kDown(e) {
 
 function kUp(e) {
 	e.preventDefault();
-	document.removeEventListener("mousemove");
+	e.stopPropagation();
 	dn = false;
-	setColor(e,"#ff7");
 	if ((new Date().getTime() - b) > long) {	// Long-press
 		testOut("Long-press detected: "+(new Date().getTime() - b)+"ms");
 		reset(e);
 		x = e.pageX; y = e.pageY;
 	} else {
-		testOut("&nbsp;");
 		ctrl(e);
 	}
 }
@@ -101,18 +101,20 @@ function fmtTime(h,m,s) {
 	return pad2(h)+':'+pad2(m)+':'+pad2(s);
 }
 function getTarget(e) {
-	if (e.target.style) return e.target;
-	if (e.currentTarget) return e.currentTarget;
+	return e.currentTarget ? e.currentTarget : e.target;
 }
 function setColor(event,color) {
-	getTarget(event).style.color = color;
+	getTarget(event).style.setProperty("color", color);
 }
 function setValue(obj,value) {
-	if (obj.target.nodeValue) obj.target.nodeValue = value;
-	else if (obj.target.innerText) obj.target.innerText = value;
+	obj.target.innerText = value;
 }
 
 // Test
+function tout(s) {
+	var test = document.getElementById("props");
+	test.innerHTML += "<br/>" + s;
+}
 function testOut(s) {
 	var test = document.getElementById("test");
 	test.innerHTML = s;
@@ -121,15 +123,18 @@ function props(obj) {
 	var s = "", v;
 	for(var p in obj)
 		if(obj[p]) {
-			if(typeof obj[p] === "function")
+			if(typeof obj[p] === "function") {
+				//if(p.match(/^set/))
 				s += p+"()<br/>";
-			else {
+			} else {
 				v = obj[p].toString().replace(/</, "&lt;");
 				v = v.replace(/>/, "&gt;");
+				//if(p.match(/^[niv]/))
 				s += p+"="+v+"<br/>";
 			}
 		}
-	testOut(s);
+	document.getElementById("props").innerHTML = s;
+	//testOut(s);
 }
 if (!window.Android) {
 	var Android = {

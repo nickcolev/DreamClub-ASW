@@ -3,7 +3,7 @@
 <link href="stopwatch.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="stopwatch.js"></script>
 </head>
-<body onload="init()">
+<body>
 
 <table height="98%" width="100%">
  <tr>
@@ -13,7 +13,6 @@
  <tr height="5%">
   <td width="100%" class="click time"
 	onTouchStart="kDown(event)" onTouchEnd="kUp(event)"
-	onMouseDown="kDown(event)" onMouseUp="kUp(event)"
 	title="Click to Start">00:00:00</td>
  </tr>
  <tr>
@@ -23,5 +22,7 @@
 	>&nbsp;</td>
  </tr>
 </table>
+
+<div id="props" style="position:absolute;top:1;left:1;"></div>
 
 </body></html>
