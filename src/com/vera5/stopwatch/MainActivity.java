@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 		// Bind JS and Android code
 		myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 		// Load a HTML from assets
-        myWebView.loadUrl("file:///android_asset/stopwatch.htm");
+		myWebView.loadUrl("file:///android_asset/stopwatch.htm");
 	}
 
 	protected static String logName() {

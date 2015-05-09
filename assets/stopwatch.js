@@ -1,19 +1,16 @@
-var t, t1, t2, o, run = false, ms = 0, b, dn = false, long = 500,
+var t, t1, t2, run = false, ms = 0, b, dn = false,
 	x, y, ts=0;
-var cnt=0;
 
-var sw = {	// Future development
-	ts: 0,	// time stamp
-	t: 0,
-	run: false,
-	ms: 0,
-	x: 0,
-	y: 0,
-	start: function(e) { },
-	stop: function(e) { }
-}
+var aTimer = new Array();
 
-function init() {
+function stopwatch() {
+	this.ts=0;	// time stamp
+	this.t=null;
+	this.run=false;
+	this.ms=1;
+	this.x=0;
+	this.y=0;
+	this.start = function(e) { alert("sw.start() "+e); }
 }
 
 function reset(e) {
@@ -71,6 +68,14 @@ function stop (e) {
   run = false;
 }
 
+function split(e) {
+	if (run) {
+		var mainTimer = document.getElementsByClassName("time");
+		var split = document.getElementById("split");
+		split.innerHTML += mainTimer[0].innerText + "<br/>";
+	}
+}
+
 function kDown(e) {
 	e.preventDefault();
 	e.stopPropagation();
@@ -84,7 +89,7 @@ function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
-	if ((new Date().getTime() - b) > long) {	// Long-press
+	if ((new Date().getTime() - b) > 500) {	// Long-press (adjust if necessary
 		testOut("Long-press detected: "+(new Date().getTime() - b)+"ms");
 		reset(e);
 		x = e.pageX; y = e.pageY;
@@ -107,7 +112,10 @@ function setColor(event,color) {
 	getTarget(event).style.setProperty("color", color);
 }
 function setValue(obj,value) {
-	obj.target.innerText = value;
+	if (obj.target.nodeValue)
+		obj.target.nodeValue = value;
+	else
+		obj.target.innerText = value;
 }
 
 // Test
@@ -134,27 +142,10 @@ function props(obj) {
 			}
 		}
 	document.getElementById("props").innerHTML = s;
-	//testOut(s);
 }
 if (!window.Android) {
 	var Android = {
 		save: function(time,tag) { console.log(time,tag); },
 		Tooltip: function(msg) { console.log(msg); }
 	}
-}
-
-var mx, my;
-function kmDown(e) {
-	e.preventDefault();
-	mx = e.pageX; my = e.pageY;
-	//console.log(e);
-}
-function kmUp(e) {
-	e.preventDefault();
-	if (my > e.pageY) newTimer(e);
-	console.log(e, e.pageX - mx, e.pageY - my);
-}
-function newTimer(e) {
-	alert("New timer under development");
-	//Android.Tooltip("under devel");
 }
