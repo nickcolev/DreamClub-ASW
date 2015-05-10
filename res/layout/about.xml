@@ -9,7 +9,7 @@
 		    android:layout_width="fill_parent" 
 		    android:layout_height="fill_parent"
 		    android:gravity="center"
-		    android:text="Version 0.9a\n(c) Vera5, 2011"
+		    android:text="Simple StopWatch\nVersion 1.0a\n(c) Vera5, 2011"
 		/>
 
 </LinearLayout>

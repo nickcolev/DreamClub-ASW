@@ -3,16 +3,12 @@
 <link href="stopwatch.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="stopwatch.js"></script>
 </head>
-<body>
+<body onload="init()">
 
 <table height="98%" width="100%">
- <tr><td class="click tag"	onClick="setTag(event)">&nbsp;</td></tr>
- <tr height="5%"><td class="click time" onTouchStart="kDown(event)" onTouchEnd="kUp(event)">00:00:00</td></tr>
- <tr height="5%"><td id="split" width="100%" onClick="split(event)"></td></tr>
- <tr><td id="test" onClick="split(event)">&nbsp;</td></tr>
+ <tr height="45%"><td id="tag" onClick="setTag(event)"></td></tr>
+ <tr><td id="time" onDblClick="ctrl(event)" onClick="kUp(event)" onTouchStart="kDown(event)" onTouchEnd="kUp(event)">00:00:00</td></tr>
+ <tr height="45%"><td id="split" width="100%" onClick="split(event)"></td></tr>
 </table>
-
-<!-- test display -->
-<div id="props" style="position:absolute;top:1;left:1;"></div>
 
 </body></html>
