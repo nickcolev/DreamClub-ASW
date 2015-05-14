@@ -8,12 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View.OnLongClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import java.io.File;
-
-import android.view.KeyEvent;
 
 public class MainActivity extends Activity {
 

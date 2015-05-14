@@ -14,12 +14,9 @@ public class WebAppInterface {
 
   private final static String TAG = "ASW";
   private final MainActivity mParent;
-  private final String log;
 
 	WebAppInterface(MainActivity ma) {
         mParent = ma;
-        //log = Environment.getExternalStorageDirectory().getAbsolutePath()+"/stopwatch.tsv";
-		log = "/data/data/com.vera5.stopwatch/files/stopwatch.tsv";
 	}
 
 	private void Tooltip(String s) {
