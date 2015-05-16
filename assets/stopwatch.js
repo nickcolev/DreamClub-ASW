@@ -2,51 +2,51 @@ var t, t1, t2, run=false, ms=0, ts=0, dn=false, dx=0, interval=1000,
 	x, y, oSplit, oTag, oTime;
 
 var cookie = {
-	run: false,
-	ms: 0,
-	t1: 0,
-	t2: 0,
 	getCookie: function(name) {
-		var a = Array(),
-			cookies = document.cookie.split(";");
-		for (var i=0; i<cookies.length; i++) {
-			a = cookies[i].split("=");
-			if (a[0] === name) return a[1];
+		var re = new RegExp(name+"=(\\w+)");
+		try {
+			var m = re.exec(document.cookie);
+			return m[1];
+		} catch(e) {
 		}
-		return null;
 	},
 	getBool: function(name) {
 		var s = this.getCookie(name);
-		if (s == null) return false;
+		if (!s) return false;
 		return (s == "true" ? true : false);
 	},
 	getInt: function(name) {
 		var s = this.getCookie(name);
-		if (s != null) return parseInt(s);
+		if (!s) return 0;
+		if (isNaN(s)) return 0;
+		return parseInt(s);
 	}
 };
 
 function init() {
+	ms = t1 = t2 = 0;
 	oSplit = document.getElementById("split");
 	oTag   = document.getElementById("tag");
 	oTime  = document.getElementById("time");
+//alert(document.cookie);
 	if (cookie.getBool("run")) {
 		// Restore cookies
-		ms = cookie.getInt("ms"));
+//alert(cookie.getCookie("t2"));
+		ms = cookie.getInt("ms");
+		tick();
 		start();
 	} else alert(document.cookie);
 }
 
 function onBackPressed() {
+//alert("[Back] ms="+ms+", t2="+t2+", t1="+ t1);
 	setCookie("run",run);
-	setCookie("ms",ms);
-	setCookie("t1",t1);
-	setCookie("t2",t2);
+	setCookie("ms",ms + t2 - t1);
 }
 
 function reset(e) {
 	var wasStopped = !run;
-	stop(e);
+	stop();
 	ms = 0;
 	if (wasStopped && oTag.innerText) {
 		Android.save(oTime.innerText, oTag.innerText);
@@ -54,6 +54,7 @@ function reset(e) {
 	}
 	oTime.innerText = "00:00:00";
 	oTag.innerText = oSplit.innerText = "";
+	ms = t1 = t2 = 0;
 }
 
 function tick() {
@@ -133,19 +134,8 @@ function setColor(color) {
 	oTime.style.setProperty("color", color);
 }
 function setCookie(name,value) {
-	if (value === undefined)	// Delete
-		document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-	else
+	if (value)
 		document.cookie = name+"="+value;
-}
-
-function getCookie4(name) {
-	var a = Array(),
-		cookies = document.cookie.split(";"),
-		value = null;
-	for (var i=0; i<cookies.length; i++) {
-		a = cookies[i].split("=");
-		if (a[0] === name) return a[1];
-	}
-	return null;
+	else	// Delete
+		document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 }
