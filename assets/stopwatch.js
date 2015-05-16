@@ -1,4 +1,4 @@
-var t, t1, t2, run=false, ms=0, ts=0, dn=false, dx=0, interval=1000,
+var t, ms=0, ts=0, dn=false, interval=250,
 	x, y, oSplit, oTag, oTime;
 
 var cookie = {
@@ -24,42 +24,44 @@ var cookie = {
 };
 
 function init() {
-	ms = t1 = t2 = 0;
 	oSplit = document.getElementById("split");
 	oTag   = document.getElementById("tag");
 	oTime  = document.getElementById("time");
-//alert(document.cookie);
-	if (cookie.getBool("run")) {
-		// Restore cookies
-//alert(cookie.getCookie("t2"));
-		ms = cookie.getInt("ms");
-		tick();
+	// Restore status from cookies
+	ms = cookie.getInt("ms");
+	ts = cookie.getInt("ts");
+	tick();
+	if (ts > 0) {
+		ms += new Date().getTime() - ts;
 		start();
-	} else alert(document.cookie);
+	}
 }
 
 function onBackPressed() {
-//alert("[Back] ms="+ms+", t2="+t2+", t1="+ t1);
-	setCookie("run",run);
-	setCookie("ms",ms + t2 - t1);
+	setCookie("ms",ms);
+	if (running()) {	// Set cookies
+		setCookie("ts",new Date().getTime());
+	} else {			// Clear cookies
+		setCookie("ts");
+	}
 }
 
 function reset(e) {
-	var wasStopped = !run;
+	var wasStopped = !running();
 	stop();
-	ms = 0;
 	if (wasStopped && oTag.innerText) {
 		Android.save(oTime.innerText, oTag.innerText);
 		oTag.innerHTML = "";
 	}
 	oTime.innerText = "00:00:00";
 	oTag.innerText = oSplit.innerText = "";
-	ms = t1 = t2 = 0;
+	ms = 0;
 }
 
 function tick() {
-	t2 = new Date().getTime();
-	dx = ms + t2 - t1;
+	ms += interval;
+	//if ((ms % 1000) < 1000) return;
+	var dx = ms;
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
 	var hh = Math.floor (dx/1000/60/60);
@@ -76,30 +78,27 @@ function setTag(e) {
 }
 
 function ctrl() {
-	if (run)
-		stop ();
+	if (running())
+		stop();
 	else
 		start ();
 }
 
 function start() {
-	t1 = new Date().getTime();
 	t = setInterval(function(){ tick(); },interval);
 	setColor("#ff9");
-	run = true;
 }
 
 function stop() {
-  clearInterval(t);
-  if (t2) ms += t2 - t1;
-  setColor("");
-  run = false;
+	clearInterval(t);
+	t = null;
+	setColor("");
 }
 
 function split(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	if (run) oSplit.innerHTML += oTime.innerText + "<br/>";
+	if (running()) oSplit.innerHTML += oTime.innerText + "<br/>";
 }
 
 function kDown(e) {
@@ -108,7 +107,7 @@ function kDown(e) {
 	dn = true;
 	x = e.pageX; y = e.pageY;
 	ts = e.timeStamp;
-	setColor("#776");
+	setColor("#997");
 }
 
 function kUp(e) {
@@ -117,13 +116,16 @@ function kUp(e) {
 	dn = false;
 	x = e.pageX; y = e.pageY;
 	if ((e.timeStamp - ts) > 500) {		// Long-press (adjust if necessary
-		reset(e);
+		reset();
 	} else {
-		ctrl(e);
+		ctrl();
 	}
 }
 
 // Helpers
+function running() {
+	return (t != null);
+}
 function pad2(n) {
   return (n < 10 ? '0' : '') + n;
 }
