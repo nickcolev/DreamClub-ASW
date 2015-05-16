@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import java.io.File;
@@ -23,13 +22,10 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+Log.d("***", "onCreate()");
 		this.context = getApplicationContext();
 		setContentView(R.layout.main);
 		myWebView = (WebView) findViewById(R.id.webview);
-		// Cookie
-		CookieSyncManager.createInstance(this.context);
-		CookieSyncManager.getInstance().startSync();
-//Log.d("***", "acceptCookie="+cm.acceptCookie());
 		// Enable JavaScript
 		myWebView.getSettings().setJavaScriptEnabled(true);
 		// Enable Alert
@@ -38,27 +34,16 @@ public class MainActivity extends Activity {
 		myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 		// Load a HTML from assets
 		myWebView.loadUrl("file:///android_asset/stopwatch.htm");
-		// Cookies
-		//CookieManager.getInstance().setAcceptCookie(true);	
-	}
-/*
-	@Override
-	public void onResume() {
-		CookieSyncManager.getInstance().stopSync();
-		super.onResume();
 	}
 
-	@Override
-	public void onPause() {
-		CookieSyncManager.getInstance().sync();
-		super.onPause();
-	}
-*/
+@Override
+public void onSaveInstanceState(Bundle savedInstanceState) {
+Log.d("***", "onSaveInstanceState()");
+}
+
 	@Override
 	public void onBackPressed() {
-		myWebView.loadUrl("javascript:onBackPressed()");
-		CookieSyncManager.getInstance().sync();
-		super.onBackPressed();
+		moveTaskToBack(true);
 	}
 
 	protected static String logName() {

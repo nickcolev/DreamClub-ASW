@@ -1,49 +1,10 @@
-var t, ms=0, ts=0, dn=false, interval=250,
+var t, ms=0, ts=0, dn=false, interval=1000,
 	x, y, oSplit, oTag, oTime;
-
-var cookie = {
-	getCookie: function(name) {
-		var re = new RegExp(name+"=(\\w+)");
-		try {
-			var m = re.exec(document.cookie);
-			return m[1];
-		} catch(e) {
-		}
-	},
-	getBool: function(name) {
-		var s = this.getCookie(name);
-		if (!s) return false;
-		return (s == "true" ? true : false);
-	},
-	getInt: function(name) {
-		var s = this.getCookie(name);
-		if (!s) return 0;
-		if (isNaN(s)) return 0;
-		return parseInt(s);
-	}
-};
 
 function init() {
 	oSplit = document.getElementById("split");
 	oTag   = document.getElementById("tag");
 	oTime  = document.getElementById("time");
-	// Restore status from cookies
-	ms = cookie.getInt("ms");
-	ts = cookie.getInt("ts");
-	tick();
-	if (ts > 0) {
-		ms += new Date().getTime() - ts;
-		start();
-	}
-}
-
-function onBackPressed() {
-	setCookie("ms",ms);
-	if (running()) {	// Set cookies
-		setCookie("ts",new Date().getTime());
-	} else {			// Clear cookies
-		setCookie("ts");
-	}
 }
 
 function reset(e) {
@@ -60,7 +21,6 @@ function reset(e) {
 
 function tick() {
 	ms += interval;
-	//if ((ms % 1000) < 1000) return;
 	var dx = ms;
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
@@ -134,10 +94,4 @@ function fmtTime(h,m,s) {
 }
 function setColor(color) {
 	oTime.style.setProperty("color", color);
-}
-function setCookie(name,value) {
-	if (value)
-		document.cookie = name+"="+value;
-	else	// Delete
-		document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 }
