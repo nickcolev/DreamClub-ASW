@@ -1,10 +1,47 @@
-var t, t1, t2, run=false, ms=0, ts=0, dn=false,
+var t, t1, t2, run=false, ms=0, ts=0, dn=false, dx=0, interval=1000,
 	x, y, oSplit, oTag, oTime;
+
+var cookie = {
+	run: false,
+	ms: 0,
+	t1: 0,
+	t2: 0,
+	getCookie: function(name) {
+		var a = Array(),
+			cookies = document.cookie.split(";");
+		for (var i=0; i<cookies.length; i++) {
+			a = cookies[i].split("=");
+			if (a[0] === name) return a[1];
+		}
+		return null;
+	},
+	getBool: function(name) {
+		var s = this.getCookie(name);
+		if (s == null) return false;
+		return (s == "true" ? true : false);
+	},
+	getInt: function(name) {
+		var s = this.getCookie(name);
+		if (s != null) return parseInt(s);
+	}
+};
 
 function init() {
 	oSplit = document.getElementById("split");
 	oTag   = document.getElementById("tag");
 	oTime  = document.getElementById("time");
+	if (cookie.getBool("run")) {
+		// Restore cookies
+		ms = cookie.getInt("ms"));
+		start();
+	} else alert(document.cookie);
+}
+
+function onBackPressed() {
+	setCookie("run",run);
+	setCookie("ms",ms);
+	setCookie("t1",t1);
+	setCookie("t2",t2);
 }
 
 function reset(e) {
@@ -19,9 +56,9 @@ function reset(e) {
 	oTag.innerText = oSplit.innerText = "";
 }
 
-function tick(e) {
-	t2 = new Date ();
-	var dx = ms + t2.getTime() - t1.getTime();
+function tick() {
+	t2 = new Date().getTime();
+	dx = ms + t2 - t1;
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
 	var hh = Math.floor (dx/1000/60/60);
@@ -37,23 +74,23 @@ function setTag(e) {
 	if (s) tag.innerHTML = s;
 }
 
-function ctrl (e) {
+function ctrl() {
 	if (run)
-		stop (e);
+		stop ();
 	else
-		start (e);
+		start ();
 }
 
-function start (e) {
-	t1 = new Date ();
-	t = setInterval(function(){ tick(e); },1000);
+function start() {
+	t1 = new Date().getTime();
+	t = setInterval(function(){ tick(); },interval);
 	setColor("#ff9");
 	run = true;
 }
 
-function stop (e) {
+function stop() {
   clearInterval(t);
-  if (t2) ms += t2.getTime() - t1.getTime();
+  if (t2) ms += t2 - t1;
   setColor("");
   run = false;
 }
@@ -94,4 +131,21 @@ function fmtTime(h,m,s) {
 }
 function setColor(color) {
 	oTime.style.setProperty("color", color);
+}
+function setCookie(name,value) {
+	if (value === undefined)	// Delete
+		document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+	else
+		document.cookie = name+"="+value;
+}
+
+function getCookie4(name) {
+	var a = Array(),
+		cookies = document.cookie.split(";"),
+		value = null;
+	for (var i=0; i<cookies.length; i++) {
+		a = cookies[i].split("=");
+		if (a[0] === name) return a[1];
+	}
+	return null;
 }
