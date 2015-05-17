@@ -1,4 +1,4 @@
-var t, ms=0, ts=0, dn=false, interval=1000,
+var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
 	x, y, oSplit, oTag, oTime;
 
 function init() {
@@ -16,12 +16,11 @@ function reset(e) {
 	}
 	oTime.innerText = "00:00:00";
 	oTag.innerText = oSplit.innerText = "";
-	ms = 0;
+	ms = t1 = 0;
 }
 
 function tick() {
-	ms += interval;
-	var dx = ms;
+	var dx = ms + new Date().getTime () - t1;
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
 	var hh = Math.floor (dx/1000/60/60);
@@ -45,6 +44,7 @@ function ctrl() {
 }
 
 function start() {
+	t1 = new Date().getTime();
 	t = setInterval(function(){ tick(); },interval);
 	setColor("#ff9");
 }

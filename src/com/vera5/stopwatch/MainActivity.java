@@ -22,7 +22,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-Log.d("***", "onCreate()");
 		this.context = getApplicationContext();
 		setContentView(R.layout.main);
 		myWebView = (WebView) findViewById(R.id.webview);
@@ -35,11 +34,6 @@ Log.d("***", "onCreate()");
 		// Load a HTML from assets
 		myWebView.loadUrl("file:///android_asset/stopwatch.htm");
 	}
-
-@Override
-public void onSaveInstanceState(Bundle savedInstanceState) {
-Log.d("***", "onSaveInstanceState()");
-}
 
 	@Override
 	public void onBackPressed() {
