@@ -20,7 +20,7 @@ function reset(e) {
 }
 
 function tick() {
-	var dx = ms + new Date().getTime () - t1;
+	var dx = ms + elapsed();
 	var dd = Math.floor (dx/1000/60/60/24);
 	dx -= dd * 1000*60*60*24;
 	var hh = Math.floor (dx/1000/60/60);
@@ -33,7 +33,7 @@ function tick() {
 
 function setTag(e) {
 	var	s = prompt("Tag", oTag.innerText);
-	if (s) tag.innerHTML = s;
+	if (s != null) tag.innerHTML = s;
 }
 
 function ctrl() {
@@ -51,6 +51,7 @@ function start() {
 
 function stop() {
 	clearInterval(t);
+	ms += elapsed();
 	t = null;
 	setColor("");
 }
@@ -75,7 +76,7 @@ function kUp(e) {
 	e.stopPropagation();
 	dn = false;
 	x = e.pageX; y = e.pageY;
-	if ((e.timeStamp - ts) > 500) {		// Long-press (adjust if necessary
+	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary
 		reset();
 	} else {
 		ctrl();
@@ -83,6 +84,9 @@ function kUp(e) {
 }
 
 // Helpers
+function elapsed() {
+	return new Date().getTime() - t1;
+}
 function running() {
 	return (t != null);
 }
