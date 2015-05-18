@@ -1,5 +1,11 @@
-var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
+var t=null, t1=0, ms=0, ts=0, dn=false, scrl=false, interval=100,
 	x, y, oSplit, oTag, oTime;
+
+if (!window.Android) {
+	window.Android = {
+		save: function() { console.log("Save"); }
+	}
+}
 
 function init() {
 	oSplit = document.getElementById("split");
@@ -69,19 +75,31 @@ function split(e) {
 }
 
 function kDown(e) {
-	e.preventDefault();
-	e.stopPropagation();
+	//e.preventDefault();
+	//e.stopPropagation();
 	dn = true;
 	x = e.pageX; y = e.pageY;
 	ts = e.timeStamp;
 	setColor("#997");
 }
 
+document.addEventListener('scroll', function(e){
+	//e.stopPropagation();
+	//alert("onScroll");
+	scrl = true;
+});
+
 function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
 	x = e.pageX; y = e.pageY;
+	if (scrl) {
+		//alert ("scroll");
+		scrl = false;
+		setColor(running() ? "#ff9" : "");
+		return true;
+	}
 	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary
 		reset();
 	} else {

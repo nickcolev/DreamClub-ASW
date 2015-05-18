@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Toast;
 import java.io.File;
 
 public class MainActivity extends Activity {
@@ -38,6 +40,21 @@ public class MainActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		moveTaskToBack(true);
+	}
+
+	@Override
+	public boolean onKeyUp( int keyCode, KeyEvent event ) {
+		switch(keyCode) {
+			case KeyEvent.KEYCODE_VOLUME_UP:
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+				//Toast.makeText(this, "Vol. -", Toast.LENGTH_SHORT).show();
+				myWebView.loadUrl("javascript:ctrl()");
+				return false; 
+			case KeyEvent.KEYCODE_POWER:
+				//Toast.makeText(this, "Power", Toast.LENGTH_SHORT).show();
+				return true; 
+		}
+		return super.onKeyUp(keyCode,event);
 	}
 
 	protected static String logName() {
