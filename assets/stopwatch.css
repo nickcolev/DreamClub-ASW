@@ -1,6 +1,7 @@
 a	{ text-decoration: none; color: #ff0; }
 body	{ background-color: #121; color: #fff; font-family: sans-serif; border: 0; margin: 0; }
+small	{ font-size: 70%; }
 td	{ text-align: center; }
-#tag	{ font-size: 1em; height: 37.5%; vertical-align: bottom; }
+#tag	{ font-size: 1em; height: 37.5%; vertical-align: bottom; min-height: 0.75in; }
 #time	{ font-size: 3.25em; height: 1%; font-weight: bold; color: #ffe; }
-#split	{ font-size: 1.5em; height: inherit; vertical-align: top; }
+#split	{ font-size: 1.75em; height: inherit; vertical-align: top; }

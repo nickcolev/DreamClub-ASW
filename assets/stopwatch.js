@@ -12,7 +12,7 @@ function reset(e) {
 	stop();
 	if (wasStopped && oTag.innerText) {
 		Android.save(oTime.innerText, oTag.innerText);
-		oTag.innerHTML = "";
+		oTag.innerHTML = '';
 	}
 	oTime.innerText = "00:00:00";
 	oTag.innerText = oSplit.innerText = "";
@@ -59,7 +59,13 @@ function stop() {
 function split(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	if (running()) oSplit.innerHTML += oTime.innerText + "<br/>";
+	//var s = oTime.innerText.replace(/00:/g,'');
+	if (running()) {
+		//oSplit.innerHTML += oTime.innerText + "<small>."+((ms+elapsed()) % 10)+"</small><br/>";
+		oSplit.innerHTML = oTime.innerText + "<small>."+((ms+elapsed()) % 10)+"</small><br/>"
+			+ oSplit.innerHTML;
+		//oSplit.innerHTML += s.replace(/^0/,'') + "<small>."+((ms+elapsed()) % 10)+"</small><br/>";
+	}
 }
 
 function kDown(e) {
