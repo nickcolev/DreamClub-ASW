@@ -58,18 +58,13 @@ function stop() {
 function split(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	//var s = oTime.innerText.replace(/00:/g,'');
 	if (running()) {
-		//oSplit.innerHTML += oTime.innerText + "<small>."+((ms+elapsed()) % 10)+"</small><br/>";
 		oSplit.innerHTML = oTime.innerText + "<small>."+((ms+elapsed()) % 10)+"</small><br/>"
-			+ oSplit.innerHTML;
-		//oSplit.innerHTML += s.replace(/^0/,'') + "<small>."+((ms+elapsed()) % 10)+"</small><br/>";
+			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
 	}
 }
 
 function kDown(e) {
-	//e.preventDefault();
-	//e.stopPropagation();
 	dn = true;
 	x = e.pageX; y = e.pageY;
 	ts = e.timeStamp;
