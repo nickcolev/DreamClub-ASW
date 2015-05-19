@@ -75,7 +75,7 @@ function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
-	if (Math.abs(e.pageX-x) > 3 || Math.abs(e.pageY-y) > 3)
+	if (Math.abs(e.pageX-x) > 5 || Math.abs(e.pageY-y) > 5)
 		return setLastColor();
 	x = e.pageX; y = e.pageY;
 	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary

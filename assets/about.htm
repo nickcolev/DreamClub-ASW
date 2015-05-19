@@ -3,10 +3,10 @@
 <link href="stopwatch.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 function init() {
-	var u = document.location.toString();
-	var p = u.indexOf("?");
-	if (p != -1)
-		document.getElementById("ver").innerText = u.substring(p+1);
+  if(document.cookie) {
+	var a = document.cookie.toString().split("=");
+	document.getElementById("ver").innerText = a[1];
+  }
 }
 </script>
 </head>
