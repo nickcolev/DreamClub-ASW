@@ -1,4 +1,4 @@
-var t=null, t1=0, ms=0, ts=0, dn=false, scrl=false, interval=100,
+var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
 	x, y, oSplit, oTag, oTime;
 
 if (!window.Android) {
@@ -83,23 +83,13 @@ function kDown(e) {
 	setColor("#997");
 }
 
-document.addEventListener('scroll', function(e){
-	//e.stopPropagation();
-	//alert("onScroll");
-	scrl = true;
-});
-
 function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
+	if (Math.abs(e.pageX-x) > 3 || Math.abs(e.pageY-y) > 3)
+		return setLastColor();
 	x = e.pageX; y = e.pageY;
-	if (scrl) {
-		//alert ("scroll");
-		scrl = false;
-		setColor(running() ? "#ff9" : "");
-		return true;
-	}
 	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary
 		reset();
 	} else {
@@ -122,4 +112,8 @@ function fmtTime(h,m,s) {
 }
 function setColor(color) {
 	oTime.style.setProperty("color", color);
+}
+function setLastColor() {
+	setColor(running() ? "#ff9" : "");
+	return true;
 }
