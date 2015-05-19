@@ -26,15 +26,8 @@ function reset(e) {
 }
 
 function tick() {
-	var dx = ms + elapsed();
-	var dd = Math.floor (dx/1000/60/60/24);
-	dx -= dd * 1000*60*60*24;
-	var hh = Math.floor (dx/1000/60/60);
-	dx -= hh * 1000*60*60;
-	var mm = Math.floor (dx/1000/60);
-	dx -= mm * 1000*60;
-	var ss = Math.floor (dx/1000);
-	oTime.innerText = fmtTime(hh,mm,ss);
+	var now = new Date(ms + elapsed());
+	oTime.innerHTML = fmtTime(now.getUTCHours(),now.getMinutes(),now.getSeconds(),now.getMilliseconds()%10);
 }
 
 function setTag(e) {
