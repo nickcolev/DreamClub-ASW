@@ -1,12 +1,9 @@
-<html><head><TITLE>StopWatch</TITLE>
+<html><head><TITLE>StopWatch &raquo; About</TITLE>
 <meta name="viewport" content="width=device-width,height=device-height"/>
 <link href="stopwatch.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 function init() {
-  if(document.cookie) {
-	var a = document.cookie.toString().split("=");
-	document.getElementById("ver").innerText = a[1];
-  }
+	document.getElementById("ver").innerText = Android.version();
 }
 </script>
 </head>
