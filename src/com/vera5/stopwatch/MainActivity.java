@@ -46,11 +46,9 @@ public class MainActivity extends Activity {
 		switch(keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				//Toast.makeText(this, "Vol. -", Toast.LENGTH_SHORT).show();
 				myWebView.loadUrl("javascript:ctrl()");
 				return false; 
 			case KeyEvent.KEYCODE_POWER:
-				//Toast.makeText(this, "Power", Toast.LENGTH_SHORT).show();
 				return true; 
 		}
 		return super.onKeyUp(keyCode,event);
@@ -72,6 +70,13 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+			case R.id.about:
+				try {
+					startActivity(new Intent(".About"));
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
+				return true;
 			case R.id.log:
 				try {
 					startActivity(new Intent(".Logger"));
@@ -79,12 +84,8 @@ public class MainActivity extends Activity {
 					Log.e(TAG, e.getMessage());
 				}
 				return true;
-			case R.id.about:
-				try {
-					startActivity(new Intent(".About"));
-				} catch (Exception e) {
-					Log.e(TAG, e.getMessage());
-				}
+			case R.id.reset:
+				myWebView.loadUrl("javascript:reset()");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -13,7 +13,7 @@ function init() {
 	oTime  = document.getElementById("time");
 }
 
-function reset(e) {
+function reset() {
 	var wasStopped = !running();
 	stop();
 	if (wasStopped && oTag.innerText) {
