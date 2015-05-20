@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
   protected static final String TAG = "ASW01";
   protected static Context context;
   private WebView myWebView;
+  private boolean isLongKeyPress = false;
  
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +42,35 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onKeyUp( int keyCode, KeyEvent event ) {
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		event.startTracking();
+		return true;
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch(keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				myWebView.loadUrl("javascript:ctrl()");
-				return false; 
-			case KeyEvent.KEYCODE_POWER:
+				if(isLongKeyPress)	// There is isLongPress(), but doesn't work on MB511
+					myWebView.loadUrl("javascript:reset()");
+				else
+					myWebView.loadUrl("javascript:ctrl()");
+				isLongKeyPress = false;
 				return true; 
 		}
 		return super.onKeyUp(keyCode,event);
+	}
+
+	@Override
+	public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+		switch(keyCode) {
+			case KeyEvent.KEYCODE_VOLUME_UP:
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+				isLongKeyPress = true;
+				return true;
+		}
+		return super.onKeyLongPress(keyCode, event);
 	}
 
 	// Menu
