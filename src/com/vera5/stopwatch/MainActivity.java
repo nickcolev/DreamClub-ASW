@@ -17,7 +17,6 @@ public class MainActivity extends Activity {
 
   protected static final String TAG = "ASW01";
   protected static Context context;
-  private static final String logfile = "stopwatch.tsv";
   private WebView myWebView;
  
 	@Override
@@ -52,10 +51,6 @@ public class MainActivity extends Activity {
 				return true; 
 		}
 		return super.onKeyUp(keyCode,event);
-	}
-
-	protected static String logName() {
-		return context.getFilesDir().getPath()+"/"+logfile;
 	}
 
 	// Menu

@@ -17,7 +17,8 @@ function reset() {
 	var wasStopped = !running();
 	stop();
 	if (wasStopped && oTag.innerText) {
-		Android.save(oTime.innerText, oTag.innerText);
+		//alert(oSplit.innerText);
+		Android.save(oTag.innerText,oTime.innerText,oSplit.innerText);
 		oTag.innerHTML = '';
 	}
 	oTime.innerText = "00:00:00";
@@ -75,7 +76,7 @@ function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
-	if (Math.abs(e.pageX-x) > 5 || Math.abs(e.pageY-y) > 5)
+	if (Math.abs(e.pageX-x) > 7 || Math.abs(e.pageY-y) > 6)
 		return setLastColor();
 	x = e.pageX; y = e.pageY;
 	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary
