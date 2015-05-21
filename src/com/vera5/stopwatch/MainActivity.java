@@ -43,8 +43,13 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		event.startTracking();
-		return true;
+		switch(keyCode) {
+			case KeyEvent.KEYCODE_VOLUME_UP:
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+			event.startTracking();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
