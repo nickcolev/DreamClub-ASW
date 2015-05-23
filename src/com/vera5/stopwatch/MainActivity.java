@@ -78,16 +78,17 @@ public class MainActivity extends Activity {
 		return super.onKeyLongPress(keyCode, event);
 	}
 
-protected void onSaveInstanceState(Bundle state) {
+	protected void onSaveInstanceState(Bundle state) {
 Log.d("***MA***", "onSaveInstanceState()");
-        super.onSaveInstanceState(state);
-}
+		super.onSaveInstanceState(state);
+	}
 
 	@Override
 	public void onDestroy() {
 Log.d("***MA***", "onDestroy()");
 		super.onDestroy();
 	}
+
 	protected void onPause() {
 Log.d("***MA***", "onPause()");
 		super.onPause();
