@@ -88,13 +88,14 @@ public class Logger extends Activity {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			String row;
-			String[] a;
+			String[] a, t;
 			while ((row = in.readLine()) != null) {
 				a = row.split("\t");
+				t = a[2].split(",");
 				log += "\n" +
 					(extended ?
-						a[0]+"\t"+a[1]+"\t"+a[2]+(a.length > 3 ? "\t"+a[3] : "") :
-						a[2]+"\t"+a[1]);
+						a[0]+"\t"+a[1]+"\t"+fmtTime(t[0]) :
+						fmtTime(t[0])+"\t"+a[1]);
 			}
 			in.close();
 		} catch (IOException e) {
@@ -104,11 +105,8 @@ public class Logger extends Activity {
 		return (log.length() > 5 ? "Time\t\tTag"+log : na);
 	}
 
-	protected void put(String tag, String time, String split) {
-		String  row = now()
-			+"\t"+tag
-			+"\t"+time
-			+"\t"+getSplit(split)+"\n";
+	protected void put(String tag, String time) {
+		String  row = now() +"\t"+tag +"\t"+time+"\n";
 		try {
 			FileOutputStream out = new FileOutputStream(logName(),true);
 			out.write(row.getBytes());
@@ -138,6 +136,21 @@ public class Logger extends Activity {
 	protected static String now() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(new Date());
+	}
+
+	private String fmtTime(String ms) {
+		int p = ms.indexOf(":");	// FIXME Temp solution
+		if (p != -1) return ms;
+		long l = Long.parseLong(ms);
+		Date d = new Date(l);
+		return pad2(d.getHours())
+			+":"+pad2(d.getMinutes())
+			+":"+pad2(d.getSeconds())
+			+"."+Math.round((l%1000)/100);	// getMilliseconds() ?
+	}
+
+	private String pad2(int n) {
+		return ""+(n < 10 ? "0" : "")+n;
 	}
 
 }

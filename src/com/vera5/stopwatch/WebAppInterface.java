@@ -11,10 +11,10 @@ public class WebAppInterface {
 		this.ctx = ctx;
 	}
 
-	public void save(String tag, String time, String split) {
+	public void save(String tag, String time) {
 		Logger log = new Logger();
 		log.setContext(ctx);
-		log.put(tag, time, split);
+		log.put(tag, time);
 	}
 
 }

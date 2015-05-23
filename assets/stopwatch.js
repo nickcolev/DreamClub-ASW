@@ -1,9 +1,9 @@
 var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
-	x, y, oSplit, oTag, oTime;
+	x, y, oSplit, oTag, oTime, splits = "";
 
 if (!window.Android) {
 	window.Android = {
-		save: function() { console.log("Save"); }
+		save: function(tag,times) { console.log("Save:",tag,times+"ms"); }
 	}
 }
 
@@ -14,21 +14,20 @@ function init() {
 }
 
 function reset() {
-	var wasStopped = !running();
+	if (!running() && oTag.innerText)
+		Android.save(oTag.innerText,getTimes());
 	stop();
-	if (wasStopped && oTag.innerText) {
-		//alert(oSplit.innerText);
-		Android.save(oTag.innerText,oTime.innerText,oSplit.innerText);
-		oTag.innerHTML = '';
-	}
 	oTime.innerText = "00:00:00";
-	oTag.innerText = oSplit.innerText = "";
+	oTag.innerText = oSplit.innerText = splits = "";
 	ms = t1 = 0;
 }
 
+function getTimes() {
+	return '' + ms + splits;
+}
+
 function tick() {
-	var now = new Date(ms + elapsed());
-	oTime.innerHTML = fmtTime(now.getUTCHours(),now.getMinutes(),now.getSeconds(),now.getMilliseconds()%10);
+	oTime.innerHTML = fmtTime(ms + elapsed());
 }
 
 function setTag(e) {
@@ -53,14 +52,17 @@ function stop() {
 	clearInterval(t);
 	ms += elapsed();
 	t = null;
-	setColor("");
+	setColor('');
 }
 
 function split(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	if (running()) {
-		oSplit.innerHTML = oTime.innerText + "<small>."+((ms+elapsed()) % 10)+"</small><br/>"
+		var msec = ms + elapsed();
+		splits = "," + msec + splits;
+		oSplit.innerHTML = oTime.innerText
+			+ "<small>."+Math.round((msec%1000)/100)+"</small><br/>"
 			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
 	}
 }
@@ -96,8 +98,11 @@ function running() {
 function pad2(n) {
   return (n < 10 ? '0' : '') + n;
 }
-function fmtTime(h,m,s) {
-	return pad2(h)+':'+pad2(m)+':'+pad2(s);
+function fmtTime(msec) {
+	var now = new Date(msec);
+	return pad2(now.getUTCHours())
+		+":"+pad2(now.getMinutes())
+		+":"+pad2(now.getSeconds());
 }
 function setColor(color) {
 	oTime.style.setProperty("color", color);
