@@ -119,8 +119,8 @@ Log.d("***MA***", "onPause()");
 					Log.e(TAG, e.getMessage());
 				}
 				return true;
-			case R.id.reset:
-				myWebView.loadUrl("javascript:reset()");
+			case R.id.tag:
+				myWebView.loadUrl("javascript:setTag()");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
