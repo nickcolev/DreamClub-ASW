@@ -1,5 +1,5 @@
 var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
-	x, y, oSplit, oTag, oTime, splits = "";
+	x, y, oSplit, oTag, oTime, splits = "", lap=0;
 
 if (!window.Android) {
 	window.Android = {
@@ -19,7 +19,7 @@ function reset() {
 	stop();
 	oTime.innerText = "00:00:00";
 	oTag.innerText = oSplit.innerText = splits = "";
-	ms = t1 = 0;
+	ms = t1 = lap = 0;
 }
 
 function getTimes() {
@@ -60,10 +60,12 @@ function split(e) {
 	e.preventDefault();
 	if (running()) {
 		var msec = ms + elapsed();
+		lap = msec - lap;
 		splits = "," + msec + splits;
-		oSplit.innerHTML = oTime.innerText
-			+ "<small>."+Math.round((msec%1000)/100)+"</small><br/>"
+		oSplit.innerHTML = fmtTime(lap)
+			+ "<small>."+Math.round((lap%1000)/100)+"</small><br/>"
 			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
+		lap = msec;
 	}
 }
 

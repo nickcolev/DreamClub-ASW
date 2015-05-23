@@ -78,22 +78,6 @@ public class MainActivity extends Activity {
 		return super.onKeyLongPress(keyCode, event);
 	}
 
-	protected void onSaveInstanceState(Bundle state) {
-Log.d("***MA***", "onSaveInstanceState()");
-		super.onSaveInstanceState(state);
-	}
-
-	@Override
-	public void onDestroy() {
-Log.d("***MA***", "onDestroy()");
-		super.onDestroy();
-	}
-
-	protected void onPause() {
-Log.d("***MA***", "onPause()");
-		super.onPause();
-	}
-
 	// Menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
