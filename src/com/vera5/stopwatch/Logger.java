@@ -94,7 +94,7 @@ public class Logger extends Activity {
 				t = a[2].split(",");
 				log += "\n" +
 					(extended ?
-						a[0]+"\t"+a[1]+"\t"+getTime(t,extended) :
+						a[0]+",\""+a[1].replace("\"","\"\"")+"\","+getTime(t,extended) :
 						fmtTime(t[0])+"\t"+a[1]);
 			}
 			in.close();
@@ -106,7 +106,7 @@ public class Logger extends Activity {
 			log = na;
 		else
 			log = extended ?
-				"Tab-separated CSV\n\nTimestamp\tTag\tTime(s)"+log :
+				"CSV\n\nTimestamp,Tag,Time(s)"+log :
 				"Time\t\tTag"+log;
 		return log;
 	}
