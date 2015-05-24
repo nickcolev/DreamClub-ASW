@@ -94,7 +94,7 @@ public class Logger extends Activity {
 				t = a[2].split(",");
 				log += "\n" +
 					(extended ?
-						a[0]+"\t"+a[1]+"\t"+fmtTime(t[0]) :
+						a[0]+"\t"+a[1]+"\t"+getTime(t,extended) :
 						fmtTime(t[0])+"\t"+a[1]);
 			}
 			in.close();
@@ -102,7 +102,13 @@ public class Logger extends Activity {
 			log = e.getMessage();
 			Log.e(MainActivity.TAG, e.getMessage());
 		}
-		return (log.length() > 5 ? "Time\t\tTag"+log : na);
+		if (log.length() < 6)
+			log = na;
+		else
+			log = extended ?
+				"Tab-separated CSV\n\nTimestamp\tTag\tTime(s)"+log :
+				"Time\t\tTag"+log;
+		return log;
 	}
 
 	protected void put(String tag, String time) {
@@ -117,8 +123,16 @@ public class Logger extends Activity {
 		}
 	}
 
-	private String getSplit(String split) {
-		return split.trim().replace("\n",",");
+	private String getTime(String[] split, boolean extended) {
+		String s = "";
+		if (extended) {
+			for (int i=0; i<split.length; i++)
+				s += ","+fmtTime(split[i]);
+				s = s.substring(1);	// skip the leading ','
+		} else {
+			s = split[0].trim();
+		}
+		return s;
 	}
 
 	private void Tooltip(String s) {
