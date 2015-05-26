@@ -80,10 +80,10 @@ function kUp(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	dn = false;
-	if (Math.abs(e.pageX-x) > 7 || Math.abs(e.pageY-y) > 6)
+	if (Math.abs(e.pageX-x) > 8 || Math.abs(e.pageY-y) > 7)
 		return setLastColor();
 	x = e.pageX; y = e.pageY;
-	if ((e.timeStamp - ts) > 570) {		// Long-press (adjust if necessary
+	if ((e.timeStamp - ts) > 580) {		// Long-press (adjust if necessary
 		reset();
 	} else {
 		ctrl();

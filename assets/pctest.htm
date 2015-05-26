@@ -1,0 +1,14 @@
+<html><head><TITLE>StopWatch</TITLE>
+<meta name="viewport" content="width=device-width,height=device-height"/>
+<link href="stopwatch.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="stopwatch.js"></script>
+</head>
+<body onload="init()">
+
+<table height="98%" width="100%">
+ <tr><td id="tag" onClick="setTag(event)">Test</td></tr>
+ <tr><td id="time" onMouseUp="kUp(event)" onMouseDown="kDown(event)">00:00:00</td></tr>
+ <tr><td id="split" width="100%" onClick="split(event)"></td></tr>
+</table>
+
+</body></html>

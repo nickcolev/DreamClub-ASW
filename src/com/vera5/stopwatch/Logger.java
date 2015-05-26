@@ -106,7 +106,7 @@ public class Logger extends Activity {
 			log = na;
 		else
 			log = extended ?
-				"CSV\n\nTimestamp,Tag,Time(s)"+log :
+				"CSV (import to a spread sheet for further processing)\n\nTimestamp,Tag,Time(s)"+log :
 				"Time\t\tTag"+log;
 		return log;
 	}
@@ -157,7 +157,7 @@ public class Logger extends Activity {
 		if (p != -1) return ms;
 		long l = Long.parseLong(ms);
 		Date d = new Date(l);
-		return pad2(d.getHours())
+		return pad2(d.getHours() + d.getTimezoneOffset()/60)
 			+":"+pad2(d.getMinutes())
 			+":"+pad2(d.getSeconds())
 			+"."+Math.round((l%1000)/100);	// getMilliseconds() ?
