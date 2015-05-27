@@ -27,7 +27,9 @@ function getTimes() {
 }
 
 function tick() {
-	oTime.innerHTML = fmtTime(ms + elapsed());
+	var d = new Date(ms + elapsed());
+	if (d.getMilliseconds() < 100)
+		oTime.innerHTML = fmtTime(d);
 }
 
 function setTag(e) {
@@ -56,14 +58,17 @@ function stop() {
 }
 
 function split(e) {
-	e.stopPropagation();
 	e.preventDefault();
+	e.stopPropagation();
 	if (running()) {
 		var msec = ms + elapsed();
 		lap = msec - lap;
 		splits = "," + msec + splits;
-		oSplit.innerHTML = fmtTime(lap)
-			+ "<small>."+Math.round((lap%1000)/100)+"</small><br/>"
+		var d = new Date(lap);
+		var decs = Math.round(d.getMilliseconds() / 100);
+		if (decs == 10) decs = 9;	// skew, but otherwise .10 has been shown
+		oSplit.innerHTML = fmtTime(d)
+			+ "<small>."+decs+"</small><br/>"
 			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
 		lap = msec;
 	}
@@ -100,11 +105,10 @@ function running() {
 function pad2(n) {
   return (n < 10 ? '0' : '') + n;
 }
-function fmtTime(msec) {
-	var now = new Date(msec);
-	return pad2(now.getUTCHours())
-		+":"+pad2(now.getMinutes())
-		+":"+pad2(now.getSeconds());
+function fmtTime(date) {
+	return pad2(date.getUTCHours())
+		+":"+pad2(date.getMinutes())
+		+":"+pad2(date.getSeconds());
 }
 function setColor(color) {
 	oTime.style.setProperty("color", color);

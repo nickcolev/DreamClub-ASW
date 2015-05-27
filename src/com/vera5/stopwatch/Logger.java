@@ -153,8 +153,6 @@ public class Logger extends Activity {
 	}
 
 	private String fmtTime(String ms) {
-		int p = ms.indexOf(":");	// FIXME Temp solution
-		if (p != -1) return ms;
 		long l = Long.parseLong(ms);
 		Date d = new Date(l);
 		return pad2(d.getHours() + d.getTimezoneOffset()/60)
