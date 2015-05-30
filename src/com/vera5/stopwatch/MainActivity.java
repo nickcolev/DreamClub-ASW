@@ -9,9 +9,13 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import android.view.MotionEvent;
+import android.view.View.OnTouchListener;
 
 public class MainActivity extends Activity {
 
@@ -19,7 +23,8 @@ public class MainActivity extends Activity {
   protected static Context context;
   private WebView myWebView;
   private boolean isLongKeyPress = false;
- 
+  private float X0=0, Y0=0;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,6 +39,33 @@ public class MainActivity extends Activity {
 		myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 		// Load a HTML from assets
 		myWebView.loadUrl("file:///android_asset/stopwatch.htm");
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// Long touch
+		myWebView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+//int action = e.getAction();
+//Log.d("***MA***", "action: "+action+", Time "+e.getDownTime()+"ms, Pressure: "+e.getPressure()+", Size: "+e.getSize()+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY()));
+				switch(e.getAction()) {
+					case 0:		// Down
+						X0 = e.getX();
+						Y0 = e.getY();
+						break;
+					case 1:		// Up
+						if (isLong(e)) {
+							//dbg(e);
+							myWebView.loadUrl("javascript:reset()");
+							return true;
+						}
+						break;
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -110,6 +142,27 @@ public class MainActivity extends Activity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void dbg(MotionEvent e) {
+		Tooltip("Time: "+(e.getEventTime()-e.getDownTime())+"ms"
+			+", Size: "+(e.getSize()*100)
+			+", Pressure: "+e.getPressure()
+			+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY())
+			//+", was: "+Math.round(e.getHistoricalX(0))+"/"+Math.round(e.getHistoricalY(0))
+			+", p: "+Math.round(X0)+"/"+Math.round(Y0)
+		);
+	}
+
+	private boolean isLong(MotionEvent e) {
+		if ((e.getEventTime()-e.getDownTime()) < 550 ||
+			Math.abs(Math.round(e.getX())-X0) > 5 ||
+			Math.abs(Math.round(e.getY())-Y0) > 5) return false;
+		return true;
+	}
+
+	private void Tooltip(String s) {
+		Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
 	}
 
 }
