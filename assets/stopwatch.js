@@ -1,5 +1,5 @@
 var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
-	x, y, oSplit, oTag, oTime, splits = "", lap=0;
+	x, y, oSplit, oTag, oTime, splits = "", lap=0, cnt=0;
 
 if (!window.Android) {
 	window.Android = {
@@ -17,7 +17,7 @@ function reset() {
 	if (!running() && oTag.innerText)
 		Android.save(oTag.innerText,getTimes());
 	stop();
-	oTime.innerText = "00:00:00";
+	oTime.innerHTML = "<span>00:00:00</span><small>.0</small>";
 	oTag.innerText = oSplit.innerText = splits = "";
 	ms = t1 = lap = 0;
 }
@@ -27,9 +27,11 @@ function getTimes() {
 }
 
 function tick() {
+	oTime.children[1].innerText = "."+cnt;
+	if (++cnt > 9) cnt = 0;
 	var d = new Date(ms + elapsed());
 	if (d.getMilliseconds() < 100)
-		oTime.innerHTML = fmtTime(d);
+		oTime.children[0].innerText = fmtTime(d);
 }
 
 function setTag(e) {
@@ -58,8 +60,6 @@ function stop() {
 }
 
 function split(e) {
-	e.preventDefault();
-	e.stopPropagation();
 	if (running()) {
 		var msec = ms + elapsed();
 		lap = msec - lap;
@@ -67,8 +67,7 @@ function split(e) {
 		var d = new Date(lap);
 		var decs = Math.round(d.getMilliseconds() / 100);
 		if (decs == 10) decs = 9;	// skew, but otherwise .10 has been shown
-		oSplit.innerHTML = fmtTime(d)
-			+ "<small>."+decs+"</small><br/>"
+		oSplit.innerHTML = fmtTime(d) + "<small>."+decs+"</small><br/>"
 			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
 		lap = msec;
 	}
@@ -83,7 +82,6 @@ function kDown(e) {
 
 function kUp(e) {
 	e.preventDefault();
-	e.stopPropagation();
 	dn = false;
 	if (Math.abs(e.pageX-x) > 8 || Math.abs(e.pageY-y) > 7)
 		return setLastColor();
