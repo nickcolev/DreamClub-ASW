@@ -7,38 +7,6 @@ if (!window.Android) {
 	}
 }
 
-function init() {
-	oSplit = document.getElementById("split");
-	oTag   = document.getElementById("tag");
-	oTime  = document.getElementById("time");
-}
-
-function reset() {
-	if (!running() && oTag.innerText)
-		Android.save(oTag.innerText,getTimes());
-	stop();
-	oTime.innerHTML = "<span>00:00:00</span><small>.0</small>";
-	oTag.innerText = oSplit.innerText = splits = "";
-	ms = t1 = lap = 0;
-}
-
-function getTimes() {
-	return '' + ms + splits;
-}
-
-function tick() {
-	oTime.children[1].innerText = "."+cnt;
-	if (++cnt > 9) cnt = 0;
-	var d = new Date(ms + elapsed());
-	if (d.getMilliseconds() < 100)
-		oTime.children[0].innerText = fmtTime(d);
-}
-
-function setTag(e) {
-	var	s = prompt("Tag", oTag.innerText);
-	if (s != null) tag.innerHTML = s;
-}
-
 function ctrl() {
 	if (running())
 		stop();
@@ -46,31 +14,14 @@ function ctrl() {
 		start ();
 }
 
-function start() {
-	t1 = new Date().getTime();
-	t = setInterval(function(){ tick(); },interval);
-	setColor("#ff9");
+function getTimes() {
+	return '' + ms + splits;
 }
 
-function stop() {
-	clearInterval(t);
-	ms += elapsed();
-	t = null;
-	setColor('');
-}
-
-function split(e) {
-	if (running()) {
-		var msec = ms + elapsed();
-		lap = msec - lap;
-		splits = "," + msec + splits;
-		var d = new Date(lap);
-		var decs = Math.round(d.getMilliseconds() / 100);
-		if (decs == 10) decs = 9;	// skew, but otherwise .10 has been shown
-		oSplit.innerHTML = fmtTime(d) + "<small>."+decs+"</small><br/>"
-			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
-		lap = msec;
-	}
+function init() {
+	oSplit = document.getElementById("split");
+	oTag   = document.getElementById("tag");
+	oTime  = document.getElementById("time");
 }
 
 function kDown(e) {
@@ -92,6 +43,56 @@ function kUp(e) {
 		ctrl();
 	}
 }
+
+function reset() {
+	if (!running() && oTag.innerText)
+		Android.save(oTag.innerText,getTimes());
+	stop();
+	oTime.innerHTML = "<span>00:00:00</span><small>.0</small>";
+	oTag.innerText = oSplit.innerText = splits = "";
+	ms = t1 = lap = 0;
+}
+
+function split(e) {
+	if (running()) {
+		var msec = ms + elapsed();
+		lap = msec - lap;
+		splits = "," + msec + splits;
+		var d = new Date(lap);
+		var decs = Math.round(d.getMilliseconds() / 100);
+		if (decs == 10) decs = 9;	// skew, but otherwise .10 has been shown
+		oSplit.innerHTML = fmtTime(d) + "<small>."+decs+"</small><br/>"
+			+ "<span style=\"font-size:0.9em\">"+oSplit.innerHTML+"</span>";
+		lap = msec;
+	}
+}
+
+function setTag(e) {
+	var	s = prompt("Tag", oTag.innerText);
+	if (s != null) tag.innerHTML = s;
+}
+
+function start() {
+	t1 = new Date().getTime();
+	t = setInterval(function(){ tick(); },interval);
+	setColor("#ff9");
+}
+
+function stop() {
+	clearInterval(t);
+	ms += elapsed();
+	t = null;
+	setColor('');
+}
+
+function tick() {
+	oTime.children[1].innerText = "."+cnt;
+	if (++cnt > 9) cnt = 0;
+	var d = new Date(ms + elapsed());
+	if (d.getMilliseconds() < 100)
+		oTime.children[0].innerText = fmtTime(d);
+}
+
 
 // Helpers
 function elapsed() {
