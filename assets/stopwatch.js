@@ -34,7 +34,8 @@ function kDown(e) {
 function kUp(e) {
 	e.preventDefault();
 	dn = false;
-	if (Math.abs(e.pageX-x) > 8 || Math.abs(e.pageY-y) > 7)
+	// FIXME Is it necessary?! (as move/swipe is handled in the MainActivity)
+	if (Math.abs(e.pageX-x) > 7 || Math.abs(e.pageY-y) > 7)
 		return setLastColor();
 	x = e.pageX; y = e.pageY;
 	if ((e.timeStamp - ts) > 580) {		// Long-press (adjust if necessary
@@ -44,8 +45,8 @@ function kUp(e) {
 	}
 }
 
-function reset() {
-	if (!running() && oTag.innerText)
+function reset(save) {
+	if (!running() && oTag.innerText && save)
 		Android.save(oTag.innerText,getTimes());
 	stop();
 	oTime.innerHTML = "<span>00:00:00</span><small>.0</small>";
@@ -92,7 +93,6 @@ function tick() {
 	if (d.getMilliseconds() < 100)
 		oTime.children[0].innerText = fmtTime(d);
 }
-
 
 // Helpers
 function elapsed() {
