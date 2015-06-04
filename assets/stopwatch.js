@@ -1,5 +1,5 @@
-var t=null, t1=0, ms=0, ts=0, dn=false, interval=100,
-	x, y, oSplit, oTag, oTime, splits = "", lap=0, cnt=0;
+var t=null, t1=0, ms=0, ts=0, interval=100,
+	x1,y1,oSplit, oTag, oTime, splits = "", lap=0, cnt=0;
 
 if (!window.Android) {
 	window.Android = {
@@ -25,21 +25,19 @@ function init() {
 }
 
 function kDown(e) {
-	dn = true;
-	x = e.pageX; y = e.pageY;
+	e.preventDefault();
+	x1 = e.pageX;
+	y1 = e.pageY;
 	ts = e.timeStamp;
 	setColor("#997");
 }
 
 function kUp(e) {
 	e.preventDefault();
-	dn = false;
-	// FIXME Is it necessary?! (as move/swipe is handled in the MainActivity)
-	if (Math.abs(e.pageX-x) > 7 || Math.abs(e.pageY-y) > 7)
-		return setLastColor();
-	x = e.pageX; y = e.pageY;
+	// Move?
+	if (Math.abs(x1-e.pageX) > 5 || Math.abs(y1-e.pageY) > 5) return;
 	if ((e.timeStamp - ts) > 580) {		// Long-press (adjust if necessary
-		reset();
+		reset(true);
 	} else {
 		ctrl();
 	}

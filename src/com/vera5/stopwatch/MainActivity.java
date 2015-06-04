@@ -9,13 +9,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
-
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
 
 public class MainActivity extends Activity {
 
@@ -55,17 +54,12 @@ public class MainActivity extends Activity {
 						Y0 = e.getY();
 						break;
 					case 1:		// Up
-						dbg(e);		// FIXME Remove in the production
 						if (isMove) {
 							isMove = false;
-							if (isSwipe(e))
-								myWebView.loadUrl("javascript:reset(false)");
-							else
-								myWebView.loadUrl("javascript:setLastColor()");
-						} else
-							if (isLong(e)) {
-							myWebView.loadUrl("javascript:reset(true)");
-							return true;
+							myWebView.loadUrl("javascript:setLastColor()");
+							if (isSwipe(e)) myWebView.loadUrl("javascript:reset(false)");
+//dbg(e);		// FIXME Remove in the production
+							//return true;
 						}
 						break;
 					case 2:		// Move (swipe)
@@ -157,12 +151,14 @@ public class MainActivity extends Activity {
 		int x1 = Math.round(X0),
 			y1 = Math.round(Y0),
 			x2 = Math.round(e.getX()),
-			y2 = Math.round(e.getY());
+			y2 = Math.round(e.getY()),
+			dx = Math.abs(x1-x2),
+			dy = Math.abs(y1-y2);
 		Tooltip(""+(e.getEventTime()-e.getDownTime())+"ms"
 			//+", Size: "+(e.getSize()*100)
 			//+", Pressure: "+e.getPressure()
-			+", x:"+x1+"->"+x2+"("+Math.abs(x1-x2)+")"
-			+", y:"+y1+"->"+y2+"("+Math.abs(y1-y2)+")"
+			+", x:"+x1+"->"+x2+"("+dx+")"
+			+", y:"+y1+"->"+y2+"("+dy+")"
 			//+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY())
 			//+", was: "+Math.round(e.getHistoricalX(0))+"/"+Math.round(e.getHistoricalY(0))
 			//+", from: "+Math.round(X0)+"/"+Math.round(Y0)
