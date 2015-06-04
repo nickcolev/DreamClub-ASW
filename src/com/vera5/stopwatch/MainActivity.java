@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
   protected static Context context;
   private WebView myWebView;
   private boolean isLongKeyPress = false;
+  private boolean isMove = false;
   private float X0=0, Y0=0;
 
 	@Override
@@ -48,19 +49,27 @@ public class MainActivity extends Activity {
 		myWebView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
-//int action = e.getAction();
-//Log.d("***MA***", "action: "+action+", Time "+e.getDownTime()+"ms, Pressure: "+e.getPressure()+", Size: "+e.getSize()+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY()));
 				switch(e.getAction()) {
 					case 0:		// Down
 						X0 = e.getX();
 						Y0 = e.getY();
 						break;
 					case 1:		// Up
-						if (isLong(e)) {
-							//dbg(e);
-							myWebView.loadUrl("javascript:reset()");
+						dbg(e);		// FIXME Remove in the production
+						if (isMove) {
+							isMove = false;
+							if (isSwipe(e))
+								myWebView.loadUrl("javascript:reset(false)");
+							else
+								myWebView.loadUrl("javascript:setLastColor()");
+						} else
+							if (isLong(e)) {
+							myWebView.loadUrl("javascript:reset(true)");
 							return true;
 						}
+						break;
+					case 2:		// Move (swipe)
+						isMove = true;
 						break;
 				}
 				return false;
@@ -145,12 +154,18 @@ public class MainActivity extends Activity {
 	}
 
 	private void dbg(MotionEvent e) {
-		Tooltip("Time: "+(e.getEventTime()-e.getDownTime())+"ms"
-			+", Size: "+(e.getSize()*100)
-			+", Pressure: "+e.getPressure()
-			+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY())
+		int x1 = Math.round(X0),
+			y1 = Math.round(Y0),
+			x2 = Math.round(e.getX()),
+			y2 = Math.round(e.getY());
+		Tooltip(""+(e.getEventTime()-e.getDownTime())+"ms"
+			//+", Size: "+(e.getSize()*100)
+			//+", Pressure: "+e.getPressure()
+			+", x:"+x1+"->"+x2+"("+Math.abs(x1-x2)+")"
+			+", y:"+y1+"->"+y2+"("+Math.abs(y1-y2)+")"
+			//+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY())
 			//+", was: "+Math.round(e.getHistoricalX(0))+"/"+Math.round(e.getHistoricalY(0))
-			+", p: "+Math.round(X0)+"/"+Math.round(Y0)
+			//+", from: "+Math.round(X0)+"/"+Math.round(Y0)
 		);
 	}
 
@@ -161,8 +176,20 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	private boolean isSwipe(MotionEvent e) {
+		int x1 = Math.round(X0),
+			y1 = Math.round(Y0),
+			x2 = Math.round(e.getX()),
+			y2 = Math.round(e.getY()),
+			dx = Math.abs(x1-x2),
+			dy = Math.abs(y1-y2),
+			diff = 5;				// Adjust if necessary
+			if (dy == 0) dy = 1;	// Avoid division by zero
+			return ((dx / dy) > 5 ? true : false);
+	}
+
 	private void Tooltip(String s) {
-		Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, s, Toast.LENGTH_LONG).show();
 	}
 
 }

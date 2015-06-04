@@ -13,8 +13,8 @@ function init() {
 	oTime  = document.getElementById("time");
 }
 
-function reset() {
-	if (!running() && oTag.innerText)
+function reset(save) {
+	if (!running() && oTag.innerText && save)
 		Android.save(oTag.innerText,getTimes());
 	stop();
 	oTime.innerText = "00:00:00";
@@ -83,7 +83,7 @@ function kDown(e) {
 
 function kUp(e) {
 	e.preventDefault();
-	e.stopPropagation();
+	//e.stopPropagation();
 	dn = false;
 	if (Math.abs(e.pageX-x) > 8 || Math.abs(e.pageY-y) > 7)
 		return setLastColor();
