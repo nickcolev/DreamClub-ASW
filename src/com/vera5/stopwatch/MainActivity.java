@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -58,8 +57,6 @@ public class MainActivity extends Activity {
 							isMove = false;
 							myWebView.loadUrl("javascript:setLastColor()");
 							if (isSwipe(e)) myWebView.loadUrl("javascript:reset(false)");
-//dbg(e);		// FIXME Remove in the production
-							//return true;
 						}
 						break;
 					case 2:		// Move (swipe)
@@ -92,7 +89,7 @@ public class MainActivity extends Activity {
 		switch(keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				if(isLongKeyPress)	// There is isLongPress(), but doesn't work on MB511
+				if(isLongKeyPress)		// There is isLongPress(), but doesn't work on MB511
 					myWebView.loadUrl("javascript:reset()");
 				else
 					myWebView.loadUrl("javascript:ctrl()");
@@ -123,7 +120,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.about:
 				try {
@@ -147,45 +143,16 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void dbg(MotionEvent e) {
-		int x1 = Math.round(X0),
-			y1 = Math.round(Y0),
-			x2 = Math.round(e.getX()),
-			y2 = Math.round(e.getY()),
-			dx = Math.abs(x1-x2),
-			dy = Math.abs(y1-y2);
-		Tooltip(""+(e.getEventTime()-e.getDownTime())+"ms"
-			//+", Size: "+(e.getSize()*100)
-			//+", Pressure: "+e.getPressure()
-			+", x:"+x1+"->"+x2+"("+dx+")"
-			+", y:"+y1+"->"+y2+"("+dy+")"
-			//+", x/y: "+Math.round(e.getX())+"/"+Math.round(e.getY())
-			//+", was: "+Math.round(e.getHistoricalX(0))+"/"+Math.round(e.getHistoricalY(0))
-			//+", from: "+Math.round(X0)+"/"+Math.round(Y0)
-		);
-	}
-
-	private boolean isLong(MotionEvent e) {
-		if ((e.getEventTime()-e.getDownTime()) < 550 ||
-			Math.abs(Math.round(e.getX())-X0) > 5 ||
-			Math.abs(Math.round(e.getY())-Y0) > 5) return false;
-		return true;
-	}
-
 	private boolean isSwipe(MotionEvent e) {
 		int x1 = Math.round(X0),
 			y1 = Math.round(Y0),
 			x2 = Math.round(e.getX()),
 			y2 = Math.round(e.getY()),
 			dx = Math.abs(x1-x2),
-			dy = Math.abs(y1-y2),
-			diff = 5;				// Adjust if necessary
+			dy = Math.abs(y1-y2);
 			if (dy == 0) dy = 1;	// Avoid division by zero
-			return ((dx / dy) > 5 ? true : false);
-	}
-
-	private void Tooltip(String s) {
-		Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+			// Adjust if necessary
+			return (dx > 50 && ((dx / dy) > 5) ? true : false);
 	}
 
 }

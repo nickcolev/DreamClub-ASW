@@ -1,5 +1,5 @@
-var t=null, t1=0, ms=0, ts=0, interval=100,
-	x1,y1,oSplit, oTag, oTime, splits = "", lap=0, cnt=0;
+var t=null, t1=0, ms=0, ts=0,
+	x1,y1,oSplit, oTag, oTime, splits='', lap=0, cnt=0;
 
 if (!window.Android) {
 	window.Android = {
@@ -29,14 +29,14 @@ function kDown(e) {
 	x1 = e.pageX;
 	y1 = e.pageY;
 	ts = e.timeStamp;
-	setColor("#997");
+	setColor("#aaa");
 }
 
 function kUp(e) {
 	e.preventDefault();
 	// Move?
 	if (Math.abs(x1-e.pageX) > 5 || Math.abs(y1-e.pageY) > 5) return;
-	if ((e.timeStamp - ts) > 580) {		// Long-press (adjust if necessary
+	if ((e.timeStamp - ts) > 560) {		// Long-press (adjust if necessary)
 		reset(true);
 	} else {
 		ctrl();
@@ -56,7 +56,7 @@ function split(e) {
 	if (running()) {
 		var msec = ms + elapsed();
 		lap = msec - lap;
-		splits = "," + msec + splits;
+		splits = ',' + msec + splits;
 		var d = new Date(lap);
 		var decs = Math.round(d.getMilliseconds() / 100);
 		if (decs == 10) decs = 9;	// skew, but otherwise .10 has been shown
@@ -73,7 +73,7 @@ function setTag(e) {
 
 function start() {
 	t1 = new Date().getTime();
-	t = setInterval(function(){ tick(); },interval);
+	t = setInterval(tick,100);
 	setColor("#ff9");
 }
 
