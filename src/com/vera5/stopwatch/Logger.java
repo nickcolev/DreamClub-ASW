@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Logger extends Activity {
@@ -81,33 +82,38 @@ public class Logger extends Activity {
 	*	LocationManager.getLastKnownLocation()
 	*/
 	private String get(boolean extended) {
+
 		String na = "Nothing logged yet";
 		File f = new File(logName());
 		if (!f.exists()) return na;
 		String log = "";
+		ArrayList<String> rows = new ArrayList<String>();
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(f));
-			String row;
+			String row, s;
 			String[] a, t;
 			while ((row = in.readLine()) != null) {
 				a = row.split("\t");
 				t = a[2].split(",");
-				log += "\n" +
-					(extended ?
-						a[0]+",\""+a[1].replace("\"","\"\"")+"\","+getTime(t,extended) :
-						fmtTime(t[0])+"\t"+a[1]);
+				s = extended ?
+					a[0]+",\""+a[1].replace("\"","\"\"")+"\","+getTime(t,extended) :
+					fmtTime(t[0])+"\t"+a[1];
+				rows.add(s);
 			}
 			in.close();
 		} catch (IOException e) {
 			log = e.getMessage();
 			Log.e(MainActivity.TAG, e.getMessage());
 		}
-		if (log.length() < 6)
+		if (rows.size() == 0)
 			log = na;
-		else
-			log = extended ?
-				"CSV (import to a spread sheet for further processing)\n\nTimestamp,Tag,Time(s)"+log :
-				"Time\t\tTag"+log;
+		else {
+			if (extended) log = "CSV (import to a spread sheet for further processing)\n\n";
+			log += (extended ? "When,Tag,Time" : "Time\t\tTag") + "\n";
+			// Set the log in reverse order
+			for (int i=rows.size()-1; i>=0; i--)
+				log += rows.get(i) + "\n";
+		}
 		return log;
 	}
 
